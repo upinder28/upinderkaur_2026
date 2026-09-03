@@ -37,7 +37,8 @@ router.get('/', authenticate, async (req, res) => {
 
     if (user.role === 'employee') { conditions.push(`t.created_by = $${p++}`); params.push(user.id); }
     if (user.role === 'agent') {
-      conditions.push(`(t.assigned_agent_id = $${p++} OR t.assigned_team_id = (SELECT team_id FROM users WHERE id = $${p++}))`);
+      const p1 = p++; const p2 = p++;
+      conditions.push(`(t.assigned_agent_id = $${p1} OR t.assigned_team_id = (SELECT team_id FROM users WHERE id = $${p2}))`);
       params.push(user.id, user.id);
     }
 
